@@ -12,9 +12,11 @@ import SwiftData
 final class Node {
     var attributeName: String
     var sons: [Node]
+    var father: Node?
     
-    init(attributeName: String) {
+    init(attributeName: String, father: Node?) {
         self.attributeName = attributeName
         self.sons = []
+        self.father = father
     }
 }

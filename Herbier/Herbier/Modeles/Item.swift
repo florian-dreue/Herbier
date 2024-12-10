@@ -12,10 +12,12 @@ import SwiftData
 final class Item {
     var timestamp: Date
     var name: String
+    var node: Node
     //@Attribute(.externalStorage) var image: Data
     
-    init(timestamp: Date, name: String) {
+    init(timestamp: Date, name: String, node: Node) {
         self.timestamp = timestamp
         self.name = name
+        self.node = node
     }
 }
