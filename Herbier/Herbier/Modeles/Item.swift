@@ -11,8 +11,11 @@ import SwiftData
 @Model
 final class Item {
     var timestamp: Date
+    var name: String
+    //@Attribute(.externalStorage) var image: Data
     
-    init(timestamp: Date) {
+    init(timestamp: Date, name: String) {
         self.timestamp = timestamp
+        self.name = name
     }
 }
