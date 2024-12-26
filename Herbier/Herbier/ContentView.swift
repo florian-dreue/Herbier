@@ -11,37 +11,38 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
-
+    
+    @State private var selectedTab = 1
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        VStack() {
+            Text("Herbier")
+            Spacer()
+                .frame(height: 30)
+            TabView (selection: $selectedTab) {
+                ParameterView()
+                    .tabItem {
+                        Image(systemName: "gearshape.fill")
                     }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                    .tag(0)
+                AddPictureView()
+                    .tabItem {
+                        Image(systemName: "house.fill")
                     }
-                }
+                    .tag(1)
+                HistoryView()
+                    .tabItem {
+                        Image(systemName: "clock.fill")
+                    }
+                    .tag(2)
             }
-        } detail: {
-            Text("Select an item")
         }
+        .padding(.horizontal, 30.0)
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date(), name: "")
+            let newItem = Item(timestamp: Date(), name: "test")
             modelContext.insert(newItem)
         }
     }
