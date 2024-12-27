@@ -9,9 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-    
     @State private var selectedTab = 1
     
     var body: some View {
@@ -38,21 +35,6 @@ struct ContentView: View {
             }
         }
         .padding(.horizontal, 30.0)
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date(), name: "test")
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
     }
 }
 

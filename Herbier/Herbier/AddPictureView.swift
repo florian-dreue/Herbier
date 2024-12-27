@@ -15,7 +15,8 @@ struct AddPictureView: View {
     @State private var selectedImage: UIImage? = nil
     @State private var isImagePickerPresented: Bool = false
     @State private var selectedCategory: String = ""
-    let currentDate = Date()
+    @State private var currentDate = Date()
+    @State private var selectedDate: Date = Date()
 
     var body: some View {
         VStack() {
@@ -25,20 +26,18 @@ struct AddPictureView: View {
                     .scaledToFit()
                     .frame(width: 300, height: 300)
                     .shadow(radius: 10)
-                    .background(Color.red)
             } else {
                 Text("Aucune image sélectionnée")
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
                     .frame(width: 300, height: 300)
-                    .background(Color.red)
             }
             Spacer()
                 .frame(height: 20)
             Button("Choisir une photo") {
                 isImagePickerPresented.toggle()
             }
-            DatePicker(selection: /*@START_MENU_TOKEN@*/.constant(Date())/*@END_MENU_TOKEN@*/,
+            DatePicker(selection: $selectedDate,
                        in: ...currentDate,
                        displayedComponents: [.date],
                        label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
@@ -52,7 +51,7 @@ struct AddPictureView: View {
                 Text("Fongieux").tag("fungieux")
             }
             Button("Ajouter") {
-                
+                addItem()
             }
         }
         .sheet(isPresented: $isImagePickerPresented) {
@@ -62,9 +61,21 @@ struct AddPictureView: View {
     }
     
     private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date(), name: "test")
+        if(selectedImage != nil){
+            let imageData = selectedImage!.jpegData(compressionQuality: 1.0)
+
+            let newItem = TemporaryTable(timestamp: Date(), name: "test",image: imageData!, type: selectedCategory)
             modelContext.insert(newItem)
+            
+            do {
+                try modelContext.save()
+                print("Image sauvegardée avec succès !")
+            } catch {
+                print("Erreur lors de la sauvegarde de l'image : \(error.localizedDescription)")
+            }
+        }
+        else {
+            print("Aucune image sélectionnée")
         }
     }
     
