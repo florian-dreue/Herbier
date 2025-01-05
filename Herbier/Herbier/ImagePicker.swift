@@ -10,31 +10,31 @@ import UIKit
 
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var selectedImage: UIImage?
-    @Binding var isImagePickerPresented: Bool
+    @Binding var ImagePickerVisible: Bool
     
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         @Binding var selectedImage: UIImage?
-        @Binding var isImagePickerPresented: Bool
+        @Binding var ImagePickerVisible: Bool
         
-        init(selectedImage: Binding<UIImage?>, isImagePickerPresented: Binding<Bool>) {
+        init(selectedImage: Binding<UIImage?>, ImagePickerVisible: Binding<Bool>) {
             _selectedImage = selectedImage
-            _isImagePickerPresented = isImagePickerPresented
+            _ImagePickerVisible = ImagePickerVisible
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let image = info[.originalImage] as? UIImage {
                 selectedImage = image
             }
-            isImagePickerPresented = false
+            ImagePickerVisible = false
         }
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            isImagePickerPresented = false
+            ImagePickerVisible = false
         }
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(selectedImage: $selectedImage, isImagePickerPresented: $isImagePickerPresented)
+        return Coordinator(selectedImage: $selectedImage, ImagePickerVisible: $ImagePickerVisible)
     }
     
     func makeUIViewController(context: Context) -> UIImagePickerController {

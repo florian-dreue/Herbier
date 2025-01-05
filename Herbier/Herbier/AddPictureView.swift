@@ -10,33 +10,32 @@ import SwiftData
 
 struct AddPictureView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
     
     @State private var selectedImage: UIImage? = nil
-    @State private var isImagePickerPresented: Bool = false
+    @State private var ImagePickerVisible: Bool = false
     @State private var selectedCategory: String = ""
-    @State private var currentDate = Date()
+    private var currentDate = Date()
     @State private var selectedDate: Date = Date()
 
     var body: some View {
-        GeometryReader { geometry in
+        GeometryReader { screen in
             VStack() {
                 if let selectedImage = selectedImage {
                     Image(uiImage: selectedImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: geometry.size.width * 0.75, height: geometry.size.height * 0.4)
+                        .frame(width: screen.size.width * 0.75, height: screen.size.height * 0.4)
                         .shadow(radius: 10)
                 } else {
                     Text("Aucune image sélectionnée")
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
-                        .frame(width: geometry.size.width * 0.75, height: geometry.size.height * 0.4)
+                        .frame(width: screen.size.width * 0.75, height: screen.size.height * 0.4)
                 }
                 Spacer()
-                    .frame(height: geometry.size.height * 0.01)
+                    .frame(height: screen.size.height * 0.01)
                 Button("Choisir une photo") {
-                    isImagePickerPresented.toggle()
+                    ImagePickerVisible.toggle()
                 }
                 DatePicker(selection: $selectedDate,
                            in: ...currentDate,
@@ -55,8 +54,8 @@ struct AddPictureView: View {
                     addItem()
                 }
             }
-            .sheet(isPresented: $isImagePickerPresented) {
-                ImagePicker(selectedImage: $selectedImage, isImagePickerPresented: $isImagePickerPresented)
+            .sheet(isPresented: $ImagePickerVisible) {
+                ImagePicker(selectedImage: $selectedImage, ImagePickerVisible: $ImagePickerVisible)
             }
         }
     }
