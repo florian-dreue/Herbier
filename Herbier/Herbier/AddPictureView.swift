@@ -16,6 +16,7 @@ struct AddPictureView: View {
     @State private var selectedCategory: String = ""
     private var currentDate = Date()
     @State private var selectedDate: Date = Date()
+    @State private var pictureName: String = ""
 
     var body: some View {
         GeometryReader { screen in
@@ -42,7 +43,7 @@ struct AddPictureView: View {
                            displayedComponents: [.date],
                            label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
                 .frame(width: 300)
-                TextField("Nom de la photo", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
+                TextField("Nom de la photo", text: $pictureName)
                     .multilineTextAlignment(TextAlignment.center)
                 Picker(selection: $selectedCategory, label: Text("Catégorie")) {
                     Text("Sélectionner une catégorie").tag("")
@@ -64,7 +65,7 @@ struct AddPictureView: View {
         if(selectedImage != nil){
             let imageData = selectedImage!.jpegData(compressionQuality: 1.0)
 
-            let newItem = TemporaryTable(timestamp: Date(), name: "test",image: imageData!, type: selectedCategory)
+            let newItem = TemporaryTable(timestamp: Date(), name: pictureName,image: imageData!, type: selectedCategory)
             modelContext.insert(newItem)
             
             do {
