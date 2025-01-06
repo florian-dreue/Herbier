@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Photos
 
 struct AddPictureView: View {
     @Environment(\.modelContext) private var modelContext
@@ -17,6 +18,7 @@ struct AddPictureView: View {
     private var currentDate = Date()
     @State private var selectedDate: Date = Date()
     @State private var pictureName: String = ""
+    @State private var isPhotoLibraryAccessible = false
 
     var body: some View {
         GeometryReader { screen in //Container pour recuperer la taille de l'ecran
@@ -36,7 +38,12 @@ struct AddPictureView: View {
                 Spacer()
                     .frame(height: screen.size.height * 0.01)
                 Button("Choisir une photo") {
-                    ImagePickerVisible.toggle()
+                    if isPhotoLibraryAccessible {
+                        ImagePickerVisible.toggle()
+                    }
+                    else{
+                        
+                    }
                 }
                 Spacer()
                     .frame(height: screen.size.height * 0.05)
@@ -67,18 +74,20 @@ struct AddPictureView: View {
                 ImagePicker(selectedImage: $selectedImage, ImagePickerVisible: $ImagePickerVisible)
             }//Selection d'image de la galerie
         }
+        .onAppear {
+            checkPhotoLibraryAccess()
+        }
     }
     
     private func addItem() {
         if(selectedImage != nil){
             let imageData = selectedImage!.jpegData(compressionQuality: 1.0)
 
-            let newItem = TemporaryTable(timestamp: Date(), name: pictureName,image: imageData!, type: selectedCategory)
+            let newItem = TemporaryTable(timestamp: selectedDate, name: pictureName,image: imageData!, type: selectedCategory)
             modelContext.insert(newItem)
 
             do {
                 try modelContext.save()
-                //Sauvegarde l'enregistrement
                 print("Image sauvegardée avec succès !")
             } catch {
                 print("Erreur lors de la sauvegarde de l'image : \(error.localizedDescription)")
@@ -86,6 +95,40 @@ struct AddPictureView: View {
         }
         else {
             print("Aucune image sélectionnée")
+        }
+    }
+    
+    //Check l'autorisation actuelle
+    private func checkPhotoLibraryAccess() {
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        switch status {
+            case .authorized, .limited:
+                isPhotoLibraryAccessible = true
+            case .denied, .restricted, .notDetermined:
+                isPhotoLibraryAccessible = false
+            @unknown default:
+                isPhotoLibraryAccessible = false
+        }
+    }
+    
+    //Demande l'accès à la galerie
+    private func requestPhotoLibraryAccess() {
+        PHPhotoLibrary.requestAuthorization { status in
+            DispatchQueue.main.async {
+                switch status {
+                case .authorized, .limited:
+                    //L'utilisateur autorise ou limite l'accès
+                    isPhotoLibraryAccessible = true
+                case .denied, .restricted:
+                    //L'utilisateur refuse
+                    isPhotoLibraryAccessible = false
+                case .notDetermined:
+                    // L'utilisateur n'a pas encore répondu
+                    isPhotoLibraryAccessible = false
+                @unknown default:
+                    isPhotoLibraryAccessible = false
+                }
+            }
         }
     }
     

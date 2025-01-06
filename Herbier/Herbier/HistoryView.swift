@@ -67,7 +67,6 @@ struct HistoryView: View {
                             .padding(.horizontal, 20.0)
                             .border(Color.black, width: 1)
                             .onTapGesture {
-                                print("HStack cliqué!")
                                 showDetails = true;
                                 temporaryTableDetails = table;
                             }
