@@ -12,8 +12,8 @@ struct HistoryView: View {
     
     @Environment(\.modelContext) private var modelContext
     @State private var showDetails : Bool = false;
-    @State private var temporaryTables: [TemporaryTable] = [];
-    @State private var temporaryTableDetails: TemporaryTable? = nil;
+    @State private var fetchedRecord: [Record] = [];
+    @State private var recordDetails: Record? = nil;
     private let dateFormatter: DateFormatter = {
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
@@ -28,26 +28,26 @@ struct HistoryView: View {
                     Image(systemName: "xmark")
                         .onTapGesture {
                             showDetails = false;
-                            temporaryTableDetails = nil;
+                            recordDetails = nil;
                         }
-                    Image(uiImage: UIImage(data: temporaryTableDetails!.image)!)
+                    Image(uiImage: UIImage(data: recordDetails!.image)!)
                         .resizable()
                         .scaledToFit()
                         .frame(width: geometry.size.width * 0.75, height: geometry.size.height * 0.4)
                         .shadow(radius: 10)
                     Spacer()
                         .frame(height: 20)
-                    Text("Photo prise le: \(dateFormatter.string(from: temporaryTableDetails!.timestamp))")
+                    Text("Photo prise le: \(dateFormatter.string(from: recordDetails!.timestamp))")
                         .frame(width: geometry.size.width * 0.75)
-                    Text(temporaryTableDetails!.name)
-                    Text(temporaryTableDetails!.type)
+                    Text(recordDetails!.name)
+                    Text(recordDetails!.type)
                 }
                 .frame(width: geometry.size.width)
             }
             else {
                 VStack(alignment: .center) {
                     ScrollView {
-                        ForEach (temporaryTables) { table in
+                        ForEach (fetchedRecord) { table in
                             HStack {
                                 Image(uiImage: UIImage(data: table.image)!)
                                     .resizable()
@@ -68,7 +68,7 @@ struct HistoryView: View {
                             .border(Color.black, width: 1)
                             .onTapGesture {
                                 showDetails = true;
-                                temporaryTableDetails = table;
+                                recordDetails = table;
                             }
                         }
                     }
@@ -81,17 +81,21 @@ struct HistoryView: View {
         }
     }
     
-    // Fonction pour récupérer les données de TemporaryTable
+    // Fonction pour récupérer les données de Record
     private func fetchTemporaryTables() {
         Task {
             do {
                 print("Recup Data")
-                let fetchDescriptor = FetchDescriptor<TemporaryTable>()
+                var fetchDescriptor = FetchDescriptor<Record>()
                 
-                let tables: [TemporaryTable] = try modelContext.fetch(fetchDescriptor)
+                let sortDescriptor = SortDescriptor<Record>(\.timestamp)
                 
-                temporaryTables = tables
-                print("Final Data ", temporaryTables)
+                fetchDescriptor.sortBy = [sortDescriptor]
+                
+                let tables: [Record] = try modelContext.fetch(fetchDescriptor)
+                
+                fetchedRecord = tables
+                print("Final Data ", fetchedRecord)
             } catch {
                 print("Erreur lors de la récupération des données: \(error)")
             }

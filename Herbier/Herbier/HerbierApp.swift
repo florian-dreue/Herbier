@@ -12,10 +12,7 @@ import SwiftData
 struct HerbierApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
-            Node.self,
-            Photo.self,
-            TemporaryTable.self
+            Record.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

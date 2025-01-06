@@ -62,7 +62,7 @@ struct AddPictureView: View {
                     Text("Sélectionner une catégorie").tag("")
                     Text("Animal").tag("animal")
                     Text("Végétal").tag("vegetal")
-                    Text("Fongieux").tag("fungieux")
+                    Text("Fongieux").tag("fongieux")
                 }
                 Spacer()
                     .frame(height: screen.size.height * 0.05)
@@ -79,11 +79,12 @@ struct AddPictureView: View {
         }
     }
     
+    //Fonction pour l'ajout d'un item
     private func addItem() {
         if(selectedImage != nil){
             let imageData = selectedImage!.jpegData(compressionQuality: 1.0)
 
-            let newItem = TemporaryTable(timestamp: selectedDate, name: pictureName,image: imageData!, type: selectedCategory)
+            let newItem = Record(timestamp: selectedDate, name: pictureName,image: imageData!, type: selectedCategory)
             modelContext.insert(newItem)
 
             do {

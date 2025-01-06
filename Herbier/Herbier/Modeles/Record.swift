@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class TemporaryTable {
+final class Record {
     var timestamp: Date
     var name: String
     @Attribute(.externalStorage) var image: Data
