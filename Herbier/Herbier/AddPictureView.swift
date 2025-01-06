@@ -67,7 +67,7 @@ struct AddPictureView: View {
 
             let newItem = TemporaryTable(timestamp: Date(), name: pictureName,image: imageData!, type: selectedCategory)
             modelContext.insert(newItem)
-            
+
             do {
                 try modelContext.save()
                 print("Image sauvegardée avec succès !")

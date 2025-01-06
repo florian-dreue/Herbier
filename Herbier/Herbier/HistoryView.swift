@@ -12,7 +12,14 @@ struct HistoryView: View {
     
     @Environment(\.modelContext) private var modelContext
     @State private var showDetails : Bool = false;
-    @State private var temporaryTables: [TemporaryTable] = []
+    @State private var temporaryTables: [TemporaryTable] = [];
+    @State private var temporaryTableDetails: TemporaryTable? = nil;
+    private let dateFormatter: DateFormatter = {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .none
+            return formatter
+    }();
     
     var body: some View {
         GeometryReader { geometry in
@@ -23,43 +30,44 @@ struct HistoryView: View {
                         .onTapGesture {
                             showDetails = false
                         }
-                    Image("PhotoTest")
+                    Image(uiImage: UIImage(data: temporaryTableDetails!.image)!)
                         .resizable()
                         .scaledToFit()
                         .frame(width: geometry.size.width * 0.75, height: geometry.size.height * 0.4)
                         .shadow(radius: 10)
                     Spacer()
                         .frame(height: 20)
-                    Text("Date de la photo")
+                    Text(dateFormatter.string(from: temporaryTableDetails!.timestamp))
                         .frame(width: geometry.size.width * 0.75)
-                    Text("Nom de la photo")
-                    Text("Type de la photo")
+                    Text(temporaryTableDetails!.name)
+                    Text(temporaryTableDetails!.type)
                 }
             }
             else {
                 VStack(alignment: .center) {
                     ScrollView {
-                        ForEach (0..<10) { table in
+                        ForEach (temporaryTables) { table in
                             HStack {
-                                Image("PhotoTest")
+                                Image(uiImage: UIImage(data: table.image)!)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: geometry.size.width * 0.40, height: geometry.size.height * 0.20)
                                 Spacer()
                                 VStack {
-                                    Text("Nom de la photo")
+                                    Text(table.name)
                                     Spacer()
-                                    Text("Date")
+                                    Text(dateFormatter.string(from: table.timestamp))
                                 }
                                 .padding(.vertical, 20.0)
                                 Spacer()
-                                Text("Type")
+                                Text(table.type)
                             }
                             .padding(.horizontal, 20.0)
                             .border(Color.black, width: 1)
                             .onTapGesture {
                                 print("HStack cliqué!")
-                                showDetails = true
+                                showDetails = true;
+                                temporaryTableDetails = table;
                             }
                         }
                     }

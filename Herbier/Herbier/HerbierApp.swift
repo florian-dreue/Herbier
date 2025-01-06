@@ -13,6 +13,9 @@ struct HerbierApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
+            Node.self,
+            Photo.self,
+            TemporaryTable.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
