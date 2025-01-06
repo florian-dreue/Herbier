@@ -24,11 +24,11 @@ struct HistoryView: View {
     var body: some View {
         GeometryReader { geometry in
             if(showDetails) {
-                /*DetailView()*/
                 VStack() {
                     Image(systemName: "xmark")
                         .onTapGesture {
-                            showDetails = false
+                            showDetails = false;
+                            temporaryTableDetails = nil;
                         }
                     Image(uiImage: UIImage(data: temporaryTableDetails!.image)!)
                         .resizable()
@@ -37,11 +37,12 @@ struct HistoryView: View {
                         .shadow(radius: 10)
                     Spacer()
                         .frame(height: 20)
-                    Text(dateFormatter.string(from: temporaryTableDetails!.timestamp))
+                    Text("Photo prise le: \(dateFormatter.string(from: temporaryTableDetails!.timestamp))")
                         .frame(width: geometry.size.width * 0.75)
                     Text(temporaryTableDetails!.name)
                     Text(temporaryTableDetails!.type)
                 }
+                .frame(width: geometry.size.width)
             }
             else {
                 VStack(alignment: .center) {
@@ -51,7 +52,8 @@ struct HistoryView: View {
                                 Image(uiImage: UIImage(data: table.image)!)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.40, height: geometry.size.height * 0.20)
+                                    .frame(width: geometry.size.width * 0.40, height:
+                                            geometry.size.width < geometry.size.height ? geometry.size.height * 0.15 : geometry.size.height * 0.30)
                                 Spacer()
                                 VStack {
                                     Text(table.name)
@@ -73,6 +75,7 @@ struct HistoryView: View {
                     }
                 }
                 .onAppear {
+                    //A la génération on récupère le contenu
                     fetchTemporaryTables()
                 }
             }
