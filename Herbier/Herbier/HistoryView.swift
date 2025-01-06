@@ -20,6 +20,7 @@ struct HistoryView: View {
             formatter.timeStyle = .none
             return formatter
     }();
+    @State private var selectedCategory: String = "";
     
     var body: some View {
         GeometryReader { geometry in
@@ -46,6 +47,15 @@ struct HistoryView: View {
             }
             else {
                 VStack(alignment: .center) {
+                    Picker(selection: $selectedCategory, label: Text("Catégorie")) {
+                        Text("Filtre").tag("")
+                        Text("Animal").tag("animal")
+                        Text("Végétal").tag("vegetal")
+                        Text("Fongieux").tag("fongieux")
+                    }
+                    .onChange(of: selectedCategory) { newValue in
+                        fetchTemporaryTables(to: newValue)
+                    }
                     ScrollView {
                         ForEach (fetchedRecord) { table in
                             HStack {
@@ -73,6 +83,7 @@ struct HistoryView: View {
                         }
                     }
                 }
+                .frame(width: geometry.size.width)
                 .onAppear {
                     //A la génération on récupère le contenu
                     fetchTemporaryTables()
@@ -82,11 +93,16 @@ struct HistoryView: View {
     }
     
     // Fonction pour récupérer les données de Record
-    private func fetchTemporaryTables() {
+    private func fetchTemporaryTables(to type: String = "") {
         Task {
             do {
                 print("Recup Data")
                 var fetchDescriptor = FetchDescriptor<Record>()
+                
+                if(type != "") {
+                    let predicate = #Predicate<Record> { $0.type == type }
+                    fetchDescriptor.predicate = predicate
+                }
                 
                 let sortDescriptor = SortDescriptor<Record>(\.timestamp)
                 
