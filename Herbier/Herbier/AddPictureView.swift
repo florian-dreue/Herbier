@@ -18,7 +18,7 @@ struct AddPictureView: View {
     private var currentDate = Date()
     @State private var selectedDate: Date = Date()
     @State private var pictureName: String = ""
-    @State private var isPhotoLibraryAccessible = false
+    @State private var LibrairyAcces: Bool = false
 
     var body: some View {
         GeometryReader { screen in //Container pour recuperer la taille de l'ecran
@@ -38,7 +38,7 @@ struct AddPictureView: View {
                 Spacer()
                     .frame(height: screen.size.height * 0.01)
                 Button("Choisir une photo") {
-                    if isPhotoLibraryAccessible {
+                    if LibrairyAcces {
                         ImagePickerVisible.toggle()
                     }
                     else{
@@ -75,7 +75,7 @@ struct AddPictureView: View {
             }//Selection d'image de la galerie
         }
         .onAppear {
-            checkPhotoLibraryAccess()
+            checkAccess()
         }
     }
     
@@ -99,15 +99,15 @@ struct AddPictureView: View {
     }
     
     //Check l'autorisation actuelle
-    private func checkPhotoLibraryAccess() {
+    private func checkAccess() {
         let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         switch status {
             case .authorized, .limited:
-                isPhotoLibraryAccessible = true
+            LibrairyAcces = true
             case .denied, .restricted, .notDetermined:
-                isPhotoLibraryAccessible = false
+            LibrairyAcces = false
             @unknown default:
-                isPhotoLibraryAccessible = false
+            LibrairyAcces = false
         }
     }
     
@@ -118,15 +118,15 @@ struct AddPictureView: View {
                 switch status {
                 case .authorized, .limited:
                     //L'utilisateur autorise ou limite l'accès
-                    isPhotoLibraryAccessible = true
+                    LibrairyAcces = true
                 case .denied, .restricted:
                     //L'utilisateur refuse
-                    isPhotoLibraryAccessible = false
+                    LibrairyAcces = false
                 case .notDetermined:
                     // L'utilisateur n'a pas encore répondu
-                    isPhotoLibraryAccessible = false
+                    LibrairyAcces = false
                 @unknown default:
-                    isPhotoLibraryAccessible = false
+                    LibrairyAcces = false
                 }
             }
         }
