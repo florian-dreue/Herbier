@@ -6,18 +6,18 @@
 //
 
 import Foundation
+import SwiftUI
 import SwiftData
 
 @Model
-final class Item {
-    var timestamp: Date
-    var name: String
-    //var node: Node
-    //@Attribute(.externalStorage) var image: Data
+public final class Item {
+    @Attribute(.unique) var name: String
+    var creationDate: Date
+    var imageData: Data
     
-    init(timestamp: Date, name: String/*, node: Node*/) {
-        self.timestamp = timestamp
+    init(name: String, creationDate: Date = .now, imageData: Data) {
+        self.creationDate = creationDate
         self.name = name
-        //self.node = node
+        self.imageData = imageData
     }
 }

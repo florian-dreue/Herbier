@@ -8,13 +8,12 @@
 import SwiftUI
 import SwiftData
 
-struct AddPictureView: View {
-    @Environment(\.modelContext) private var modelContext
+struct AddItemView: View {
+    var itemsController: ItemController
     
     @State private var selectedImage: UIImage? = nil
     @State private var ImagePickerVisible: Bool = false
     @State private var selectedCategory: String = ""
-    private var currentDate = Date()
     @State private var selectedDate: Date = Date()
     @State private var pictureName: String = ""
 
@@ -33,34 +32,45 @@ struct AddPictureView: View {
                         .multilineTextAlignment(.center)
                         .frame(width: screen.size.width * 0.75, height: screen.size.height * 0.4) //Texte si pas d'image selectionnee
                 }
+                
                 Spacer()
                     .frame(height: screen.size.height * 0.01)
+                
                 Button("Choisir une photo") {
                     ImagePickerVisible.toggle()
                 }
+                
                 Spacer()
                     .frame(height: screen.size.height * 0.05)
+                
                 DatePicker(selection: $selectedDate,
-                           in: ...currentDate,
+                           in: ...Date.now,
                            displayedComponents: [.date],
                            label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
                 .frame(width: 300)
+                
                 Spacer()
                     .frame(height: screen.size.height * 0.05)
+                
                 TextField("Nom de la photo", text: $pictureName)
                     .multilineTextAlignment(TextAlignment.center)
+                
                 Spacer()
                     .frame(height: screen.size.height * 0.05)
+                
                 Picker(selection: $selectedCategory, label: Text("Catégorie")) {
                     Text("Sélectionner une catégorie").tag("")
                     Text("Animal").tag("animal")
                     Text("Végétal").tag("vegetal")
-                    Text("Fongieux").tag("fungieux")
+                    Text("Fungieux").tag("fungieux")
                 }
+                
                 Spacer()
                     .frame(height: screen.size.height * 0.05)
+                
                 Button("Ajouter") {
-                    addItem()
+                    self.itemsController.addItem(selectedImage!, selectedDate, selectedCategory, pictureName)
+                    resetSelection()
                 }
             }
             .sheet(isPresented: $ImagePickerVisible) {
@@ -69,28 +79,9 @@ struct AddPictureView: View {
         }
     }
     
-    private func addItem() {
-        if(selectedImage != nil){
-            let imageData = selectedImage!.jpegData(compressionQuality: 1.0)
-
-            let newItem = TemporaryTable(timestamp: Date(), name: pictureName,image: imageData!, type: selectedCategory)
-            modelContext.insert(newItem)
-
-            do {
-                try modelContext.save()
-                //Sauvegarde l'enregistrement
-                print("Image sauvegardée avec succès !")
-            } catch {
-                print("Erreur lors de la sauvegarde de l'image : \(error.localizedDescription)")
-            }
-        }
-        else {
-            print("Aucune image sélectionnée")
-        }
+    private func resetSelection() {
+        selectedDate = Date()
+        selectedImage = nil
+        selectedCategory = ""
     }
-    
-}
-
-#Preview {
-    AddPictureView()
 }

@@ -10,13 +10,13 @@ import SwiftData
 
 @Model
 final class Node {
-    var attributeName: String
-    var sons: [Node]
+    @Attribute(.unique) var attributeName: String
+    var sons: [Node]?
     var father: Node?
     
-    init(attributeName: String, father: Node?) {
+    init(attributeName: String, father: Node?, sons: [Node]?) {
         self.attributeName = attributeName
-        self.sons = []
+        self.sons = sons
         self.father = father
     }
 }

@@ -14,7 +14,6 @@ struct HerbierApp: App {
         let schema = Schema([
             Item.self,
             Node.self,
-            Photo.self,
             TemporaryTable.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -28,7 +27,7 @@ struct HerbierApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(itemController: ItemController(modelContext: ModelContext(sharedModelContainer)))
         }
         .modelContainer(sharedModelContainer)
     }

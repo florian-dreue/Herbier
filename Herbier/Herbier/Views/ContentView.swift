@@ -10,6 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @State private var selectedTab = 1 //Page sélectionnée
+    var itemController: ItemController
     
     var body: some View {
         VStack() {
@@ -21,12 +22,12 @@ struct ContentView: View {
                         Image(systemName: "gearshape.fill")
                     }
                     .tag(0) //Premiere page pour les parametres
-                AddPictureView()
+                AddItemView(itemsController: self.itemController)
                     .tabItem {
                         Image(systemName: "house.fill")
                     }
                     .tag(1) //Deuxieme page pour l'ajout d'enregistrement
-                HistoryView()
+                AllItemListView()
                     .tabItem {
                         Image(systemName: "clock.fill")
                     }
@@ -35,8 +36,4 @@ struct ContentView: View {
         }
         .padding(.horizontal, 30.0)
     }
-}
-
-#Preview {
-    ContentView()
 }
