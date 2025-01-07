@@ -21,16 +21,18 @@ struct ListItem: View {
         HStack() {
             Image(uiImage: UIImage(data: item.imageData) ?? UIImage())
                 .resizable()
-                .clipped()
+                .scaledToFit()
                 .frame(width: 128, height: 80)
                 .cornerRadius(8)
-                .scaledToFit()
             
             VStack(alignment: .leading, spacing: 8) {
                 Text(item.name)
+                    .foregroundColor(.black)
                 HStack {
                     Text(dateFormatter.string(from: item.creationDate))
+                        .foregroundColor(.black)
                     Text(item.node.attributeName)
+                        .foregroundColor(.black)
                 }
             }
         }
