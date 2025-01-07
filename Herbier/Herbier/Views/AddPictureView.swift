@@ -89,6 +89,10 @@ struct AddPictureView: View {
 
             do {
                 try modelContext.save()
+                selectedDate = Date()
+                selectedImage = nil
+                selectedCategory = ""
+                pictureName = ""
                 print("Image sauvegardée avec succès !")
             } catch {
                 print("Erreur lors de la sauvegarde de l'image : \(error.localizedDescription)")
