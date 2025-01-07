@@ -14,11 +14,13 @@ class Item: Identifiable {
     @Attribute(.unique) var name: String
     var creationDate: Date
     var imageData: Data
+    var node: Node
     
-    init(name: String, creationDate: Date = .now, imageData: Data) {
+    init(name: String, creationDate: Date = .now, imageData: Data, node: Node) {
         self.id = UUID()
         self.creationDate = creationDate
         self.name = name
         self.imageData = imageData
+        self.node = node
     }
 }

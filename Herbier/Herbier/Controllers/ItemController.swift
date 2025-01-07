@@ -15,9 +15,11 @@ public class ItemController {
         self.dataService = dataService
     }
     
-    public func addItem(_ selectedImage: UIImage, _ selectedDate: Date, _ selectedCategory: String, _ pictureName: String) {
+    func addItem(_ selectedImage: UIImage, _ selectedDate: Date, _ pictureName: String, _ node: Node) {
         let imageData = selectedImage.jpegData(compressionQuality: 1.0)
-        let nouvelItem = Item(name: pictureName, creationDate: selectedDate, imageData: imageData!)
+        let nouvelItem = Item(name: pictureName, creationDate: selectedDate, imageData: imageData!, node: node)
+        
+        node.items.append(nouvelItem)
         
         self.dataService.getModelContext().insert(nouvelItem)
 

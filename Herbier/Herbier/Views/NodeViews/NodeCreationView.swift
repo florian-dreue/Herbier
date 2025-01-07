@@ -46,7 +46,7 @@ struct NodeCreationView: View {
     }
     
     private func addNode() {
-        let newNode = Node(attributeName: attribute, questionForSons: questionForSons, father: parentNode, sons: nil)
+        let newNode = Node(attributeName: attribute, questionForSons: questionForSons, father: parentNode, sons: nil, items: [])
         
         modelContext.insert(newNode)
         

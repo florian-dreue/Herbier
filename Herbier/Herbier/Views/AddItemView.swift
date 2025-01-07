@@ -9,11 +9,14 @@ import SwiftUI
 import SwiftData
 
 struct AddItemView: View {
+    @Query() private var nodes: [Node]
+    @Environment(\.modelContext) private var modelContext
+    
     var itemsController: ItemController
     
     @State private var selectedImage: UIImage? = nil
     @State private var ImagePickerVisible: Bool = false
-    @State private var selectedCategory: String = ""
+    @State private var selectedNode: Node = Node(attributeName: "Sélectionner une catégorie", questionForSons: "", father: nil, sons: nil, items: [])
     @State private var selectedDate: Date = Date()
     @State private var pictureName: String = ""
 
@@ -58,18 +61,18 @@ struct AddItemView: View {
                 Spacer()
                     .frame(height: screen.size.height * 0.05)
                 
-                Picker(selection: $selectedCategory, label: Text("Catégorie")) {
-                    Text("Sélectionner une catégorie").tag("")
-                    Text("Animal").tag("animal")
-                    Text("Végétal").tag("vegetal")
-                    Text("Fungieux").tag("fungieux")
+                Picker(selection: $selectedNode, label: Text("Catégorie")) {
+                    Text(selectedNode.attributeName).tag(selectedNode)
+                    ForEach(nodes) { node in
+                        Text(node.attributeName).tag(node)
+                    }
                 }
                 
                 Spacer()
                     .frame(height: screen.size.height * 0.05)
                 
                 Button("Ajouter") {
-                    self.itemsController.addItem(selectedImage!, selectedDate, selectedCategory, pictureName)
+                    addItem()
                     resetSelection()
                 }
             }
@@ -82,6 +85,25 @@ struct AddItemView: View {
     private func resetSelection() {
         selectedDate = Date()
         selectedImage = nil
-        selectedCategory = ""
+        pictureName = ""
+        selectedNode = Node(attributeName: "Sélectionner une catégorie", questionForSons: "", father: nil, sons: nil, items: [])
+    }
+    
+    func addItem() {
+        let imageData = selectedImage!.jpegData(compressionQuality: 1.0)
+        let nouvelItem = Item(name: pictureName, creationDate: selectedDate, imageData: imageData!, node: selectedNode)
+        
+        selectedNode.items.append(nouvelItem)
+        
+        modelContext.insert(nouvelItem)
+
+        do {
+            try modelContext.save()
+            //Sauvegarde l'enregistrement
+            print("Item sauvegardé avec succès !")
+            
+        } catch {
+            print("Erreur lors de la sauvegarde de l'item : \(error.localizedDescription)")
+        }
     }
 }

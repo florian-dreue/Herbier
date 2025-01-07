@@ -16,7 +16,7 @@ class NodeController {
     }
     
     func addNode(attribute: String, question: String, parentNode: Node?) {
-        let newNode = Node(attributeName: attribute, questionForSons: question, father: nil, sons: nil)
+        let newNode = Node(attributeName: attribute, questionForSons: question, father: nil, sons: nil, items: [])
         
         self.dataService.getModelContext().insert(newNode)
         

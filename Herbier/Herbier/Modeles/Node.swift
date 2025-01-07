@@ -15,8 +15,9 @@ class Node: Identifiable {
     var questionForSons: String
     var sons: [Node]
     var father: Node?
+    var items: [Item]
     
-    init(attributeName: String, questionForSons: String, father: Node?, sons: [Node]?) {
+    init(attributeName: String, questionForSons: String, father: Node?, sons: [Node]?, items: [Item]?) {
         self.id = UUID()
         self.attributeName = attributeName
         self.questionForSons = questionForSons
@@ -24,6 +25,10 @@ class Node: Identifiable {
         self.sons = []
         if (sons != nil) {
             self.sons = sons!
+        }
+        self.items = []
+        if (items != nil) {
+            self.items = items!
         }
     }
 }

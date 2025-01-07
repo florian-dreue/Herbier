@@ -43,6 +43,10 @@ struct NodeDetailView: View {
                         Text(son.attributeName)
                     }
                 }
+                
+                ForEach(node.items) { item in
+                    ListItem(item: item)
+                }
             }
             
             Spacer()
