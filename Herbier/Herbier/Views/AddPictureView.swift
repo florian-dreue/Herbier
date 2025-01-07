@@ -19,6 +19,7 @@ struct AddPictureView: View {
     @State private var selectedDate: Date = Date()
     @State private var pictureName: String = ""
     @State private var LibrairyAcces: Bool = false
+    @State private var message: String = ""
 
     var body: some View {
         GeometryReader { screen in //Container pour recuperer la taille de l'ecran
@@ -69,6 +70,20 @@ struct AddPictureView: View {
                 Button("Ajouter") {
                     addItem()
                 }
+                if(message != ""){
+                    if(message == "success"){
+                        Text("L'enregistrement à été sauvegardé")
+                            .foregroundColor(.green)
+                    }
+                    else if(message == "error"){
+                        Text("Une erreur c'est produite. Veuillez réessayer")
+                            .foregroundColor(.red)
+                    }
+                    else if(message == "errorImage"){
+                        Text("Veuillez sélectionner une image")
+                            .foregroundColor(.red)
+                    }
+                }
             }
             .sheet(isPresented: $ImagePickerVisible) {
                 ImagePicker(selectedImage: $selectedImage, ImagePickerVisible: $ImagePickerVisible)
@@ -93,12 +108,15 @@ struct AddPictureView: View {
                 selectedImage = nil
                 selectedCategory = ""
                 pictureName = ""
+                message = "success"
                 print("Image sauvegardée avec succès !")
             } catch {
+                message = "error"
                 print("Erreur lors de la sauvegarde de l'image : \(error.localizedDescription)")
             }
         }
         else {
+            message = "errorImage"
             print("Aucune image sélectionnée")
         }
     }
