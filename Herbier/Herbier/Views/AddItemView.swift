@@ -10,10 +10,10 @@ import SwiftData
 import Photos
 
 struct AddItemView: View {
+    //Requête de récupération des différents node
     @Query() private var nodes: [Node]
-    @Environment(\.modelContext) private var modelContext
     
-    var itemsController: ItemController
+    @Environment(\.modelContext) private var modelContext
     
     @State private var selectedImage: UIImage? = nil
     @State private var ImagePickerVisible: Bool = false
@@ -91,6 +91,7 @@ struct AddItemView: View {
         }
     }
     
+    //Remets les différents champs à leur valeur par défaut
     private func resetSelection() {
         selectedDate = Date()
         selectedImage = nil
@@ -117,36 +118,36 @@ struct AddItemView: View {
     }
     
     //Check l'autorisation actuelle
-        private func checkAccess() {
-            let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-            switch status {
-                case .authorized, .limited:
-                libraryAccess = true
-                case .denied, .restricted, .notDetermined:
-                libraryAccess = false
-                @unknown default:
-                libraryAccess = false
-            }
+    private func checkAccess() {
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        switch status {
+            case .authorized, .limited:
+            libraryAccess = true
+            case .denied, .restricted, .notDetermined:
+            libraryAccess = false
+            @unknown default:
+            libraryAccess = false
         }
+    }
 
-        //Demande l'accès à la galerie
-        private func requestPhotoLibraryAccess() {
-            PHPhotoLibrary.requestAuthorization { status in
-                DispatchQueue.main.async {
-                    switch status {
-                    case .authorized, .limited:
-                        //L'utilisateur autorise ou limite l'accès
-                        libraryAccess = true
-                    case .denied, .restricted:
-                        //L'utilisateur refuse
-                        libraryAccess = false
-                    case .notDetermined:
-                        // L'utilisateur n'a pas encore répondu
-                        libraryAccess = false
-                    @unknown default:
-                        libraryAccess = false
-                    }
+    //Demande l'accès à la galerie
+    private func requestPhotoLibraryAccess() {
+        PHPhotoLibrary.requestAuthorization { status in
+            DispatchQueue.main.async {
+                switch status {
+                case .authorized, .limited:
+                    //L'utilisateur autorise ou limite l'accès
+                    libraryAccess = true
+                case .denied, .restricted:
+                    //L'utilisateur refuse
+                    libraryAccess = false
+                case .notDetermined:
+                    // L'utilisateur n'a pas encore répondu
+                    libraryAccess = false
+                @unknown default:
+                    libraryAccess = false
                 }
             }
         }
+    }
 }

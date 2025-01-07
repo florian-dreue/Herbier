@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Page de détail de l'item
 struct DetailView: View {
     var item: Item
     

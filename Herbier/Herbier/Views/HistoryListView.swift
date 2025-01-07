@@ -9,8 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct HistoryListView: View {
+    //Requete pour récupérer les données trier par leur dates
     @Query(sort: \Item.creationDate, order: .reverse) private var items: [Item]
     
+    //Formatter pour l'affichage de la date
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium

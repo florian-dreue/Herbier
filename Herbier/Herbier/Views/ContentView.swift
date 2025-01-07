@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var selectedTab = 2 //Page sélectionnée
+    @State private var selectedTab = 2 //Page sélectionnée par défaut
     var itemController: ItemController
     var nodeController: NodeController
     
@@ -23,12 +23,12 @@ struct ContentView: View {
                         Image(systemName: "gearshape.fill")
                     }
                     .tag(0) //Premiere page pour les parametres
-                GraphView(nodeController: nodeController)
+                NodeIndexView(nodeController: nodeController)
                     .tabItem {
                         Image(systemName: "pencil.circle")
                     }
                     .tag(1) //Premiere page pour les nodes
-                AddItemView(itemsController: self.itemController)
+                AddItemView()
                     .tabItem {
                         Image(systemName: "house.fill")
                     }

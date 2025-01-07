@@ -17,6 +17,7 @@ struct ParameterView: View {
                 Text("Paramètres")
                 Spacer()
                     .frame(height: screen.size.height * 0.2)
+                //Switch button pour l'autorisation d'accès à la galerie photo
                 Toggle("Autoriser l'accès à la galerie",isOn: $LibrairyAcces)
                     .onChange(of: LibrairyAcces) { newValue in
                         if newValue {

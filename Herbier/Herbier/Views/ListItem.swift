@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Affichage de chaque Item formatter pour la liste
 struct ListItem: View {
     @State var item: Item
     
