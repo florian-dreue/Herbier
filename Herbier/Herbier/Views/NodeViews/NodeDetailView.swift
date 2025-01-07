@@ -1,14 +1,7 @@
-//
-//  GraphCanva.swift
-//  Herbier
-//
-//  Created by Fréééédéric on 07/01/2025.
-//
-
 import SwiftData
 import SwiftUI
 
-struct GraphCanva: View {
+struct NodeDetailView: View {
     @Query() private var nodes: [Node] = []
     @State private var actualNode: Node? = nil
     
@@ -26,7 +19,7 @@ struct GraphCanva: View {
         NavigationView {
             ZStack {
                 Canvas { context, size in
-                    // Pour mettre les liens entre les nodes plus tard
+                    
                 }
                 
                 if nodes.isEmpty {
@@ -34,36 +27,36 @@ struct GraphCanva: View {
                 } else {
                     if let actualNode = actualNode {
                         NodeView(relativeNode: actualNode, color: Color.cyan)
-                            .offset(getPosition(for: actualNode))
+                            //.position(getPosition(for: actualNode))
                         
                         ForEach(actualNode.sons) { node in
                             NodeView(relativeNode: node, color: Color.red)
                                 .gesture(
                                     TapGesture()
                                         .onEnded {
-                                            self.actualNode = node // Met à jour le nœud actuel
+                                            self.actualNode = node // Met à jour le noeud actuel
                                         }
                                 )
-                                .offset(getPosition(for: node))
+                                //.position(getPosition(for: node))
                         }
                         
                         nodePlus(actualNode)
+                            .position(getAddButtonPosition(for: actualNode))
 
                         if let father = actualNode.father {
                             NodeView(relativeNode: father, color: Color.green)
                                 .gesture(
                                     TapGesture()
                                         .onEnded {
-                                            self.actualNode = father // Met à jour le nœud actuel avec son père
+                                            self.actualNode = father
                                         }
                                 )
-                                .offset(getPosition(for: father))
+                                //.position(getPosition(for: father))
                         }
                     }
                 }
             }
             .onAppear {
-                // Assurez-vous de charger la première node disponible dès l'apparition de la vue
                 if !nodes.isEmpty {
                     actualNode = nodes[0] // On assigne la première node si elle existe
                 }
@@ -71,8 +64,8 @@ struct GraphCanva: View {
         }
     }
     
-    // Fonction pour obtenir la position des fils en cercle autour du nœud actuel
-    private func getPosition(for node: Node) -> CGSize {
+    // Fonction pour obtenir la position des fils en cercle autour du noeud actuel
+    private func getPosition(for node: Node) -> CGPoint {
         let totalCount = self.actualNode!.sons.count
         let index = node == self.actualNode ? 0 : calculateIndex(node)
         
@@ -80,7 +73,12 @@ struct GraphCanva: View {
         
         let x = circleRadius * cos(angle) // Coordonnée X en fonction du cercle
         let y = circleRadius * sin(angle) // Coordonnée Y en fonction du cercle
-        return CGSize(width: x, height: y)
+        return CGPoint(x: x, y: y) // Retourne un CGPoint
+    }
+    
+    private func getAddButtonPosition(for node: Node) -> CGPoint {
+        let nodePosition = getPosition(for: node)
+        return CGPoint(x: nodePosition.x, y: nodePosition.y)
     }
     
     private func calculateIndex(_ node: Node) -> Int {
