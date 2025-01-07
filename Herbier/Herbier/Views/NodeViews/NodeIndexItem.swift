@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 struct NodeIndexItem: View {
     private var node: Node
     private var father: Node?

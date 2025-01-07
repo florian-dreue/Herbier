@@ -45,6 +45,7 @@ struct NodeCreationView: View {
         }
     }
     
+    //Fonction pour l'ajout d'un node
     private func addNode() {
         let newNode = Node(attributeName: attribute, questionForSons: questionForSons, father: parentNode, sons: nil, items: [])
         
