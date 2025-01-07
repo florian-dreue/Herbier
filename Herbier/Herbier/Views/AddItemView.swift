@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Photos
 
 struct AddItemView: View {
     @Query() private var nodes: [Node]
@@ -19,6 +20,7 @@ struct AddItemView: View {
     @State private var selectedNode: Node = Node(attributeName: "Sélectionner une catégorie", questionForSons: "", father: nil, sons: nil, items: [])
     @State private var selectedDate: Date = Date()
     @State private var pictureName: String = ""
+    @State private var libraryAccess: Bool = false
 
     var body: some View {
         GeometryReader { screen in //Container pour recuperer la taille de l'ecran
@@ -40,7 +42,11 @@ struct AddItemView: View {
                     .frame(height: screen.size.height * 0.01)
                 
                 Button("Choisir une photo") {
-                    ImagePickerVisible.toggle()
+                    if (libraryAccess) {
+                        ImagePickerVisible.toggle()
+                    } else {
+                        requestPhotoLibraryAccess()
+                    }
                 }
                 
                 Spacer()
@@ -80,6 +86,9 @@ struct AddItemView: View {
                 ImagePicker(selectedImage: $selectedImage, ImagePickerVisible: $ImagePickerVisible)
             }//Selection d'image de la galerie
         }
+        .onAppear() {
+            checkAccess()
+        }
     }
     
     private func resetSelection() {
@@ -106,4 +115,38 @@ struct AddItemView: View {
             print("Erreur lors de la sauvegarde de l'item : \(error.localizedDescription)")
         }
     }
+    
+    //Check l'autorisation actuelle
+        private func checkAccess() {
+            let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+            switch status {
+                case .authorized, .limited:
+                libraryAccess = true
+                case .denied, .restricted, .notDetermined:
+                libraryAccess = false
+                @unknown default:
+                libraryAccess = false
+            }
+        }
+
+        //Demande l'accès à la galerie
+        private func requestPhotoLibraryAccess() {
+            PHPhotoLibrary.requestAuthorization { status in
+                DispatchQueue.main.async {
+                    switch status {
+                    case .authorized, .limited:
+                        //L'utilisateur autorise ou limite l'accès
+                        libraryAccess = true
+                    case .denied, .restricted:
+                        //L'utilisateur refuse
+                        libraryAccess = false
+                    case .notDetermined:
+                        // L'utilisateur n'a pas encore répondu
+                        libraryAccess = false
+                    @unknown default:
+                        libraryAccess = false
+                    }
+                }
+            }
+        }
 }

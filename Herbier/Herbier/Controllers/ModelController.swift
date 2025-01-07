@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-public class ItemController {
+public class ModelController {
     private let dataService: DatabaseService
     
     init(dataService: DatabaseService) {
@@ -30,6 +30,24 @@ public class ItemController {
             
         } catch {
             print("Erreur lors de la sauvegarde de l'item : \(error.localizedDescription)")
+        }
+    }
+    
+    func addNode(attribute: String, question: String, parentNode: Node?) {
+        let newNode = Node(attributeName: attribute, questionForSons: question, father: nil, sons: nil, items: [])
+        
+        self.dataService.getModelContext().insert(newNode)
+        
+        if let parent = parentNode {
+            newNode.father = parent
+            parent.sons.append(newNode)
+        }
+        
+        do {
+            try self.dataService.getModelContext().save()
+            print("Node ajouté avec succès")
+        } catch {
+            print ("Erreur lors de l'ajout de la Node : \(error.localizedDescription)")
         }
     }
 }

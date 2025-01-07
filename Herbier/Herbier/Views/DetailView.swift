@@ -8,27 +8,31 @@
 import SwiftUI
 
 struct DetailView: View {
+    var item: Item
+    
+    private let dateFormatter: DateFormatter = {
+                let formatter = DateFormatter()
+                formatter.dateStyle = .medium
+                formatter.timeStyle = .none
+                return formatter
+    }();
+    
     var body: some View {
-        VStack() {
-            Image(systemName: "xmark")
-                .onTapGesture {
-                    /*showDetails = false*/
-                }
-            Image("PhotoTest")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 300, height: 300)
-                .shadow(radius: 10)
-            Spacer()
-                .frame(height: 20)
-            Text("Date de la photo")
-            .frame(width: 300)
-            Text("Nom de la photo")
-            Text("Type de la photo")
+        GeometryReader { geometry in
+            VStack() {
+                Image(uiImage: UIImage(data: item.imageData)!)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: geometry.size.width * 0.75, height: geometry.size.height * 0.4)
+                    .shadow(radius: 10)
+                Spacer()
+                    .frame(height: 20)
+                Text("Photo prise le: \(dateFormatter.string(from: item.creationDate))")
+                    .frame(width: geometry.size.width * 0.75)
+                Text(item.name)
+                Text(item.node.attributeName)
+            }
+            .frame(width: geometry.size.width)
         }
     }
-}
-
-#Preview {
-    DetailView()
 }

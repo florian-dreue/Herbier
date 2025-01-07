@@ -2,7 +2,7 @@
 //  HistoryView.swift
 //  Herbier
 //
-//  Created by etudiant on 26/12/2024.
+//  Created by } on 26/12/2024.
 //
 
 import SwiftUI
@@ -19,10 +19,12 @@ struct HistoryListView: View {
     }();
     
     var body: some View {
-        VStack() {
+        NavigationView {
             ScrollView() {
                 ForEach (items) { item in
-                    ListItem(item: item)
+                    NavigationLink(destination: DetailView(item: item)) {
+                        ListItem(item: item)
+                    }
                 }
             }
         }

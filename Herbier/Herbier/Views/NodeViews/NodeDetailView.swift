@@ -22,7 +22,7 @@ struct NodeDetailView: View {
     }
     
     var body: some View {
-        VStack {
+        ScrollView {
             HStack {
                 if (father != nil) {
                     Text(father!.questionForSons)

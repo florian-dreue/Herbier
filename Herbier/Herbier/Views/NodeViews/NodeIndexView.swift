@@ -16,7 +16,7 @@ struct NodeIndexView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            ScrollView {
                 ForEach(nodes) { node in
                     NavigationLink(destination: NodeDetailView(nodeController: nodeController, node: node)) {
                         NodeIndexItem(node: node)
