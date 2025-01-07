@@ -14,10 +14,6 @@ struct GraphView: View {
     var node: Node? = nil
     var nodeController: NodeController
     var body: some View {
-        VStack() {
-            if (nodes.isEmpty) {
-                
-            }
-        }
+        NodeIndexView(nodeController: nodeController)
     }
 }

@@ -9,21 +9,20 @@ import SwiftData
 import SwiftUI
 
 public class ItemController {
-    private let modelContext: ModelContext
+    private let dataService: DatabaseService
     
-    public init(modelContext: ModelContext) {
-        self.modelContext = modelContext
+    init(dataService: DatabaseService) {
+        self.dataService = dataService
     }
     
     public func addItem(_ selectedImage: UIImage, _ selectedDate: Date, _ selectedCategory: String, _ pictureName: String) {
         let imageData = selectedImage.jpegData(compressionQuality: 1.0)
         let nouvelItem = Item(name: pictureName, creationDate: selectedDate, imageData: imageData!)
         
-        
-        modelContext.insert(nouvelItem)
+        self.dataService.getModelContext().insert(nouvelItem)
 
         do {
-            try modelContext.save()
+            try self.dataService.getModelContext().save()
             //Sauvegarde l'enregistrement
             print("Item sauvegardé avec succès !")
             

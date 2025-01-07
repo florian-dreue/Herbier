@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var selectedTab = 1 //Page sélectionnée
+    @State private var selectedTab = 2 //Page sélectionnée
     var itemController: ItemController
     var nodeController: NodeController
     
@@ -18,21 +18,26 @@ struct ContentView: View {
             Text("Herbier") //Titre de l'application
             Spacer() //Espace entre le titre et la BottomBar
             TabView (selection: $selectedTab) { //BottomBar
-                GraphView(nodeController: nodeController)
+                ParameterView()
                     .tabItem {
                         Image(systemName: "gearshape.fill")
                     }
                     .tag(0) //Premiere page pour les parametres
+                GraphView(nodeController: nodeController)
+                    .tabItem {
+                        Image(systemName: "pencil.circle")
+                    }
+                    .tag(1) //Premiere page pour les nodes
                 AddItemView(itemsController: self.itemController)
                     .tabItem {
                         Image(systemName: "house.fill")
                     }
-                    .tag(1) //Deuxieme page pour l'ajout d'enregistrement
+                    .tag(2) //Deuxieme page pour l'ajout d'enregistrement
                 HistoryListView()
                     .tabItem {
                         Image(systemName: "clock.fill")
                     }
-                    .tag(2) //Troisieme page pour l'historique
+                    .tag(3) //Troisieme page pour l'historique
             }
         }
         .padding(.horizontal, 30.0)

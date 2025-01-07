@@ -26,8 +26,9 @@ struct HerbierApp: App {
     }()
 
     var body: some Scene {
+        let databaseService = DatabaseService(modelContext: ModelContext(sharedModelContainer))
         WindowGroup {
-            ContentView(itemController: ItemController(modelContext: ModelContext(sharedModelContainer)), nodeController: NodeController(modelContext: ModelContext(sharedModelContainer)))
+            ContentView(itemController: ItemController(dataService: databaseService), nodeController: NodeController(dataService: databaseService))
         }
         .modelContainer(sharedModelContainer)
     }

@@ -9,22 +9,24 @@ import SwiftData
 import SwiftUICore
 
 class NodeController {
-    private var modelContext: ModelContext
+    private var dataService: DatabaseService
     
-    public init(modelContext: ModelContext) {
-        self.modelContext = modelContext
+    public init(dataService: DatabaseService) {
+        self.dataService = dataService
     }
     
     func addNode(attribute: String, question: String, parentNode: Node?) {
-        let newNode = Node(attributeName: attribute, questionForSons: question, father: parentNode, sons: nil)
-        if (parentNode != nil) {
-            parentNode!.sons.append(newNode)
+        let newNode = Node(attributeName: attribute, questionForSons: question, father: nil, sons: nil)
+        
+        self.dataService.getModelContext().insert(newNode)
+        
+        if let parent = parentNode {
+            newNode.father = parent
+            parent.sons.append(newNode)
         }
         
-        modelContext.insert(newNode)
-        
         do {
-            try modelContext.save()
+            try self.dataService.getModelContext().save()
             print("Node ajouté avec succès")
         } catch {
             print ("Erreur lors de l'ajout de la Node : \(error.localizedDescription)")
