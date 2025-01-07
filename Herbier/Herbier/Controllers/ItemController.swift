@@ -19,6 +19,7 @@ public class ItemController {
         let imageData = selectedImage.jpegData(compressionQuality: 1.0)
         let nouvelItem = Item(name: pictureName, creationDate: selectedDate, imageData: imageData!)
         
+        
         modelContext.insert(nouvelItem)
 
         do {

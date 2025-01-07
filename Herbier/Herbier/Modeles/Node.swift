@@ -9,14 +9,21 @@ import Foundation
 import SwiftData
 
 @Model
-final class Node {
+class Node: Identifiable {
+    @Attribute(.unique) var id: UUID
     @Attribute(.unique) var attributeName: String
-    var sons: [Node]?
+    var questionForSons: String
+    var sons: [Node]
     var father: Node?
     
-    init(attributeName: String, father: Node?, sons: [Node]?) {
+    init(attributeName: String, questionForSons: String, father: Node?, sons: [Node]?) {
+        self.id = UUID()
         self.attributeName = attributeName
-        self.sons = sons
+        self.questionForSons = questionForSons
         self.father = father
+        self.sons = []
+        if (sons != nil) {
+            self.sons = sons!
+        }
     }
 }

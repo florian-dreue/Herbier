@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct AllItemListView: View {
+struct HistoryListView: View {
     @Query(sort: \Item.creationDate, order: .reverse) private var items: [Item]
     
     private let dateFormatter: DateFormatter = {

@@ -27,7 +27,7 @@ struct HerbierApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(itemController: ItemController(modelContext: ModelContext(sharedModelContainer)))
+            ContentView(itemController: ItemController(modelContext: ModelContext(sharedModelContainer)), nodeController: NodeController(modelContext: ModelContext(sharedModelContainer)))
         }
         .modelContainer(sharedModelContainer)
     }
